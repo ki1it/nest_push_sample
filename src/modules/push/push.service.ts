@@ -43,14 +43,14 @@ export class PushService {
   }
 
   public async subscribe(token: string) {
-    return await this.subscribeToTopic(token, PushTopic.news);
+    return this.subscribeToTopic(token, PushTopic.news);
   }
 
   public async unsubscribe(token: string) {
-    return await this.unsubscribeFromTopic(token, PushTopic.news);
+    return this.unsubscribeFromTopic(token, PushTopic.news);
   }
 
-  public async subscribeToTopic(token: string, topic: PushTopic) {
+  private async subscribeToTopic(token: string, topic: PushTopic) {
     this.logger.info({ token: String(token) }, "Subscribe");
     try {
       const result = await this.messaging.subscribeToTopic(token, topic);
