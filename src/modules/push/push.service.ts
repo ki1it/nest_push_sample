@@ -3,17 +3,21 @@ import { InjectPinoLogger } from "nestjs-pino";
 import * as admin from "firebase-admin";
 import * as path from "path";
 import * as fs from "fs";
+import * as config from '../../config';
 
 import { PushTopic } from "./push.constants";
 
 let firebase;
 let isFirebaseDefault = false;
 try {
-  const serviceAccountPath = path.resolve("firebase.json");
+  const { FIREBASE_SERVICE_ACCOUNT_KEY } = config;
+  const serviceAccountPath = path.resolve(FIREBASE_SERVICE_ACCOUNT_KEY);
 
   fs.accessSync(serviceAccountPath, fs.constants.R_OK);
 
-  const credential = admin.credential.cert(serviceAccountPath);
+  const credential = FIREBASE_SERVICE_ACCOUNT_KEY
+      ? admin.credential.cert(serviceAccountPath)
+      : admin.credential.applicationDefault();
 
   firebase = admin.initializeApp({ credential });
 } catch (e) {
